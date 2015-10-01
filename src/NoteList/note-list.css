@@ -1,0 +1,9 @@
+div.notelist {
+  border-width: 2 px;
+  border-color: #123456;
+  border-style: solid;
+  background-color: #222aaa;
+  color: #333333;
+  width: 50%;
+  padding: 3px;
+}

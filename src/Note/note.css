@@ -1,0 +1,10 @@
+div.note {
+  border-width: 2 px;
+  border-color: #909090;
+  border-style: solid;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #df4e8c;
+  background-color: #ffffff;
+  width: 10%;
+}
