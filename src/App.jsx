@@ -1,10 +1,12 @@
 var React = require('react/addons');
 var style = require('./App.css');
 var NoteList = require('./NoteList/note-list.js');
+var _ = require('lodash');
+var uuid = require('uuid');
 
 var Baobab = require('baobab');
 var branch = require('baobab-react/mixins').branch;
-
+var Map = require('./Map/map.js');
 
 var _App = React.createClass({
   
@@ -28,11 +30,17 @@ var _App = React.createClass({
   },
 
 
+  updateMapp: function(){
+	console.log("kkkkkkkkkkkkkkkkk");
+  },
+
   render: function() {
     return ( 
      <div className="app">
 
-       <NoteList notes={this.state.notes} /> 
+       <NoteList />
+	<Map id="map-pane" />
+	{this.getFirstNoteText()}  
 
       </div>
 

@@ -1,10 +1,26 @@
 div.note {
   border-width: 2 px;
-  border-color: #909090;
+  border-color: DarkGrey;
   border-style: solid;
+  border-radius: 2px;
   font-weight: bold;
   text-transform: uppercase;
-  color: #df4e8c;
+  background-color: white;
   background-color: #ffffff;
-  width: 10%;
+  width: 400px;
+  height: 50px;
+  margin: 10px;
+  padding: 5px;
+  box-shadow: 3px 3px 3px black;
+}
+
+.remove-note-button{
+	float:right;
+}
+
+textarea {
+	height:45px;
+	width:375px;
+	resize:none;
+	border:none;
 }

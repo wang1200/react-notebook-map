@@ -9,8 +9,7 @@ var _Note = React.createClass({
 
   cursors: function () {
     return {
-      notes: ['models', 'notes'],
-      
+      notes: ['models', 'notes'],      
       self: ['models', 'notes', this.props.id]
     };
   },
@@ -30,8 +29,8 @@ var _Note = React.createClass({
     console.log(this.props);
     return (
       <div className ="note"> 
-       <input type="text" value={this.state.self.text} onChange={this.textboxChanged}/>
-	<button type="button" className="remove-button" onClick = {this.DeleteNote}> 
+       <textarea value={this.state.self.text} onChange={this.textboxChanged}/>
+	<button type="button" className="remove-note-button" onClick = {this.DeleteNote}> 
        Remove 
        </button>	
        </div>
