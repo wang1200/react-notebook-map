@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
+
+	</head>
+
+        <body>
+          <div id="app-container">
+	</div>
+
+
+	<script>
+	/*
+        var map = L.map('map').setView([42.35, -71.08], 13);
+
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 17,
+        minZoom:9
+        }).addTo(map);
+
+	var poly_list=[];
+	var old_polygon;
+	
+	console.log("get here?");
+	var onMapClick = function onMapClick(e) {
+		console.log("reach here?");
+		console.log(e.latlng);
+		console.log("old poly");
+		console.log(poly_list);
+		var marker = new L.marker(e.latlng, {dragable:'true'}).addTo(map);
+		poly_list.push([e.latlng.lat, e.latlng.lng]);
+
+		console.log("new polygon coordinates");
+		console.log(poly_list);
+		
+		if(old_polygon != undefined){		
+			console.log(old_polygon);
+		}
+		else{
+			console.log("old_polygon is undefined");
+		}
+
+		if(old_polygon != undefined){
+			map.removeLayer(old_polygon);
+		}
+
+		var my_polygon = L.polygon(poly_list)
+		my_polygon.addTo(map);
+
+		old_polygon = my_polygon;
+		//console.log("polygon");
+		//console.log(polygon);	
+	   
+		marker.on('dragend', function(event){
+			var marker = event.target;
+			var position = marker.getLatLng();
+			marker.setLatLng([position], {draggable:'true'}).bindPopup(position.update());
+		});
+		map.addLayer(marker);
+		var polygon_layer = map.addLayer(my_polygon);
+		//console.log("polygon_layer");
+		//console.log(polygon_layer);		
+
+
+		//if(polygon_layer != undefined){
+                //      map.removeLayer(polygon_layer);
+                //}
+		
+	};
+
+	console.log("qqq qqq");
+	console.log(poly_list);
+	map.on('click', onMapClick);
+		
+	console.log("jaja jaja");
+	
+	var polygon = L.polygon(poly_list).addTo(map);	 
+
+	//function draw_poly (e){
+	//	var polygon = L.polygon(poly_list).addTo(map);   
+	//};
+
+        //L.marker([42.35, -71.08]).addTo(map)
+    //.bindPopup('a popup')
+    //.openPopup();
+
+	*/
+        </script>
+
+	
+        </body>
+	
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+
+	<script src="./node_modules/leaflet/dist/leaflet.js"></script>
+	<script src="build/bundle.js"></script>
+
+
+
+</html>
