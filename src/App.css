@@ -1,5 +1,17 @@
-.app {
+#app {
 	font-family: "Helvetica Neue", Helvetica, sans-serif;
 	background-color: #B0B0B0;
 	height: 100%;
+}
+
+#note-list {
+	height:100%;
+	float:left;
+	width:45%;
+}
+
+#map-pane {
+	height:100%;
+	margin-left: 50%;
+	top:0px;
 }

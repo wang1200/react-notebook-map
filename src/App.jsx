@@ -7,6 +7,7 @@ var uuid = require('uuid');
 var Baobab = require('baobab');
 var branch = require('baobab-react/mixins').branch;
 var Map = require('./Map/map.js');
+var TagsModal = require('./TagsModal/tags-modal.js');
 
 var _App = React.createClass({
   
@@ -38,8 +39,9 @@ var _App = React.createClass({
     return ( 
      <div className="app">
 
-       <NoteList />
+       <NoteList id="note-list"/>
 	<Map id="map-pane" />
+	<TagsModal /> 
 	{this.getFirstNoteText()}  
 
       </div>
