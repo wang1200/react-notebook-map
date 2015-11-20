@@ -1,206 +1,190 @@
 var React = require('react/addons');
 var L = require('leaflet');
-
+var Baobab = require('baobab');
+var GeoJSONLayer_map = require('../GeoJSONLayer/geojsonLayer.js');
 var branch = require('baobab-react/mixins').branch;
 require('./map.css');
 
-var marker_list = new Array();
+var map = L.map;
 
-var poly_list= new Array();
-var old_polygon;
-var old_map_lock_mode = 1;
+
+var cur_mode;
+var old_map_lock_mode;
+
+//console.log("GeojsonLayer");
+//console.log(GeoJSONLayer);
+// for test
+var a = 0;
+var poly_list = [];
+var tempLayer = null;
 
 var _Map = React.createClass({
 	mixins: [branch],
-	
-	cursors: function() {
-    		return {
-     			 notes: ['model', 'notes'],
-    		};
-  	},
 
-	createMap: function(element, e){
-		var map = L.map(element, {
-			center: [40,-87],
-			zoom: 5
-			});
+	cursors: function() {
+                return {
+                         notes: ['models', 'notes'],
+                };
+        },
+
+	currentLayer: null,
+
+	createMap: function(element) {
+		console.log("createMap function");
+
+		map = L.map(element, {
+      		center: [38,-85.5], 
+      		zoom: 5 
+    		});
+    		console.log("create map create map");
+		console.log(map);
 
 		var tiles = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', {
       			attribution: 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'
     		}).addTo(map);
+		
+		
+		//
+		console.log("compare map, this is the created map");
+		console.log(map);
 
-		//var info = L.control();
-		//info.addTo(map);
-		//info.getContainer(function() {
 		map.dragging.disable();
-		//});
-				
-		var onClickMap = function onClickMap(e){
-		console.log("old poly");
-                console.log(poly_list);
-                var marker = new L.marker(e.latlng, {draggable:'true'}).addTo(map);
-                poly_list.push([e.latlng.lat, e.latlng.lng]);
-
-                console.log("new polygon coordinates");
-                console.log(poly_list);
-
-                if(old_polygon != undefined){ 
-                        console.log(old_polygon);
-                }
-                else{
-                        console.log("old_polygon is undefined");
-                }
-
-                if(old_polygon != undefined){
-                        map.removeLayer(old_polygon);
-                }
-
-                var my_polygon = L.polygon(poly_list)
-                my_polygon.addTo(map);
-
-                old_polygon = my_polygon;
-                //console.log("polygon");
-                //console.log(polygon); 
 		
-		marker.on('dragstart', function(event){
-                        var marker = event.target;
-                        var position = marker.getLatLng();
-                        marker.setLatLng([position], {draggable:'true'}).bindPopup(position.update());
-                });
-                map.addLayer(marker);
-                var polygon_layer = map.addLayer(my_polygon);
 
-		};
-
-		var drop_marker = function drop_marker(e) {
-			var marker = new L.marker([e.latlng.lat, e.latlng.lng], {
-			draggable:true
-			});
-			
-			marker_list.push(marker);
-
-			console.log(e.latlng);
-			var move_marker = function move_marker(e){
-				marker.setLatLng (L.latLng(e.latlng.lat, e.latlng.lng));
-			};
-			map.on('mousemove', move_marker);
-			map.on('mouseup', function(e) {
-				map.off('mousemove', move_marker);
-				console.log("marker list");
-				console.log(marker_list);      
-				//var new_coord = marker.getLatLng();
-				var a = 1;
-				for(var each_marker in marker_list) {
-					a=a+1;
-					console.log("each marker");
-					console.log(each_marker);
-					console.log(marker_list[each_marker]);
-					var new_coord = marker_list[each_marker].getLatLng();
-					console.log(new_coord);
-					poly_list[each_marker] = marker_list[each_marker].getLatLng();
-					//poly_list.push([new_coord.lat, new_coord.lng]);
-					console.log("poly list aaaaa");
-					console.log(poly_list);
-				}
-				console.log("a count");
-				console.log(a);
-
-				if(old_polygon != undefined){
-                                        map.removeLayer(old_polygon);
-                                };
-
-				console.log("poly list before plot");
-				console.log(poly_list);
-				var my_polygon = L.polygon(poly_list);
-	                	my_polygon.addTo(map);
-
-				//this.context.tree.commit();
-
-				old_polygon = my_polygon;
-				var polygon_layer = map.addLayer(my_polygon);
-	
-			});
-			
-			
-			//marker.update();
-			marker.addTo(map);
-
-			//marker.on('drag', function(e){
-                        //	var marker = e.target;
-                        //	var position = marker.getLatLng();
-                        //	marker.setLatLng([position], {draggable:'true'}).bindPopup(position.update());
-                	//});
-                	//map.addLayer(marker);
-		};
-		if(old_map_lock_mode===1){
-			map.on('mousedown', drop_marker);
-
-		};
+		var drop_marker = function(e){
+                        console.log("drop marker function here");
+                        console.log("this.props in drop marker function");
+                        //console.log(pass_drop_marker);
+                        console.log(e);
 
 
-		//var my_polygon = L.polygon(poly_list);
-                //my_polygon.addTo(map);
 
-		
-		//map.on('mousedown', onClickMap);
-    		return map;
+                        marker = new L.marker([e.latlng.lat, e.latlng.lng], {
+                        draggable:true
+                        });
+
+                        console.log("mouse down listener working ??");
+                        console.log("currentLayer");
+
+                        marker_list.push(marker);
+                        this.tempLayer = L.layerGroup();
+
+                        console.log(this.tempLayer);
+
+                        this.tempLayer.addLayer(marker).addTo(map);
+			// if ( this.whichIsSelected === true) {
+                        this.cursors.geojson.set(this.tempLayer.toGeoJSON());
+                        //self.cursors.geojson.set(self.previouslyLayer.toGeoJSON());
+                        this.context.tree.commit();
+                        //
+                        var move_marker = function move_marker(e) {
+                                marker.setLatLng (L.latLng(e.latlng.lat, e.latlng.lng));
+				// if ( this.whichIsSelected === true) {
+                                this.cursors.geojson.set(this.tempLayer.toGeoJSON());
+                                this.context.tree.commit();
+                        };
+                        this.props.map.on('mousemove', move_marker);
+                        this.props.map.on('mouseup', function(e) {
+                                this.props.map.off('mousemove', move_marker);
+
+                                //self.cursors.geojson.set(self.previouslyLayer.toGeoJSON());
+				// if ( this.whichIsSelected === true)
+                                this.cursors.geojson.set(this.tempLayer.toGeoJSON());
+                                this.context.tree.commit();
+
+                        });
+
+                        //marker.addTo(self.props.map);
+                };
+
+		map.on('mousedown', drop_marker);
+
+		return map;
 	},
 
-	/*	
-	updateMap: function(e){
+	//setupMap: function () {
+        //	map.setView([this.props.lat, this.props.lon], this.props.zoom);        
+    	//},
+
+	polyCoorTrans: function(temp_layer){
+		for (var i in temp_layer){
+			var coordinate = i.getLatLng();
+			poly_list.push(coordinate);	
+			return poly_list;
+		}
+	},
+
+	whichIsSelected: function (noteIndex){
+		for ( var i in this.state.notes){
+			if (noteIndex === i.noteIndex){
+				return true;
+			}
+		}
+		
+		return false;
+	},
+
+	componentDidMount: function(e) {
+                console.log("componentDidMount");
+		
+		var map_map
+                if (this.props.createMap) {
+                        map_map = this.props.createMap(this.getDOMNode, e);
+                } else {
+                        map_map = this.createMap(this.getDOMNode(), e);
+                }
+
+		//this.setupMap();
         },
 
-	*/
-
-        componentDidMount: function(e) {
-                console.log("eet eet eet");
-                console.log(e);
-
-                if (this.props.createMap) {
-                        this.map = this.props.createMap(this.getDOMNode, e);
-                } else {
-                        this.map = this.createMap(this.getDOMNode(), e);
-                }
-        },     
-
-
 	lockMap: function(){
-		var cur_mode;
-		cur_mode = old_map_lock_mode;
-		if(cur_mode===0){			
-			this.map.dragging.disable();
-			cur_mode = 1;
-		}else{
-			this.map.dragging.enable();
-			cur_mode = 0;
+                cur_mode = old_map_lock_mode;
+                if(cur_mode===0){                       
+                        map.dragging.disable();
+                        cur_mode = 1;
+                }else{
+                        map.dragging.enable();
+                        cur_mode = 0;
+                }
+                old_map_lock_mode = cur_mode;
+        },
+        
+	render: function() {
+		console.log("map render");
+
+		console.log("this state notes");
+		console.log(this.state);		
+
+		//var mapp = this.createMap;
+
+		console.log("what map is passed now?");
+		console.log(map);
+
+		var layers = [];
+
+
+		for (var i in this.state.notes) {
+			a=a+1;
+			// check add a layer or not
+			if ( this.whichIsSelected === true){
+				layers.push(<GeoJSONLayer_map map={map}  geojson_data={this.state.notes[i].geojson} />);
+			}
 		}
-		old_map_lock_mode = cur_mode;
-	},
-	
-		
-   	render: function() {
-		console.log("map map map");
-		//console.log(this.createMap);
-		//console.log("ploy listt");
-                //console.log(poly_list);
 
-		for(var each_marker in marker_list) {
-                        console.log(each_marker);
-                        poly_list.push([marker_list[each_marker].getLatLng().lat, marker_list[each_marker].getLatLng().lng]);
- 	               console.log("ploy listt");
-        	        console.log(poly_list);
-                };
-		
-
+		console.log("map layers");
+		console.log(a);
+		console.log(layers);
 		return (
-		<div id="map-wrapper">
-      		  <div id="button-wrapper" >
-                    <input type="button" id="map-lock-button" value="lock-map" onClick={this.lockMap} />
-		  </div>
-		  <div id="map">
- 		  </div>
-		</div>
-    		);
-  	},
+			<div id="map">
+				<div id="button-wrapper" >
+                    		   <input type="button" id="map-lock-button" value="lock-map" onClick={this.lockMap} />
+                  		</div>
+
+				{layers}
+			</div>
+		);
+	}
 });
-module.exports = _Map;
+
+module.exports= _Map;
+

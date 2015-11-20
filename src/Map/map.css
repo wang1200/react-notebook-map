@@ -1,15 +1,10 @@
-#map-wrapper{
+#map{
   position: absolute;
   margin-left:35%;
   top:0px;
   height: 100%;
   width: 75%;
-}
 
-#map {
- position: relative;
- height:80%;
- width:100%;
 }
 
 #button-wrapper {
@@ -19,3 +14,5 @@
    width: 100%;
    border: 1px solid red;
 }
+
+
